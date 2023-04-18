@@ -1,4 +1,4 @@
-/*DROP DATABASE untIntegrador;*/
+DROP DATABASE untIntegrador;
 CREATE DATABASE untIntegrador;
 USE untIntegrador;
 
@@ -19,12 +19,13 @@ CREATE TABLE Empleado(
 
 DROP TABLE IF EXISTS Vehiculo;
 CREATE TABLE Vehiculo(
-	marca VARCHAR(25) NOT NULL,
+    marca VARCHAR(25) NOT NULL,
     modelo VARCHAR(25) NOT NULL,
     color VARCHAR(25) NOT NULL,
     idCode INT,
+    tipo INT,
+    estado INT,
     vendidoPor INT,
-    tipo INT NOT NULL,
     PRIMARY KEY(idCode),
     CONSTRAINT fk_vendidopor
 		FOREIGN KEY (vendidoPor)
@@ -52,6 +53,22 @@ CREATE TABLE Cliente(
             ON UPDATE NO ACTION
 );
 
+DROP TABLE IF EXISTS Vendido;
+CREATE TABLE Vendido(
+	idComprador INT,
+    idCode INT,
+    CONSTRAINT fk_comprador
+		FOREIGN KEY (idComprador)
+        REFERENCES Cliente(dni)
+			ON DELETE CASCADE
+            ON UPDATE NO ACTION,
+	CONSTRAINT fk_vehiculoVendido
+		FOREIGN KEY (idCode)
+        REFERENCES Vehiculo(idCode)
+			ON DELETE CASCADE
+            ON UPDATE NO ACTION
+);
+
 INSERT INTO Tipo (descripcion)
 VALUES ('Auto'),('Utilitario'),('Camion');
 
@@ -59,16 +76,19 @@ INSERT INTO Empleado (nombre,apellido,dni)
 VALUES('Marshall','Eriksen',159753),
 	  ('Ted','Mosby',357951);
       
-INSERT INTO Vehiculo (marca,modelo,color,idCode,tipo)
-VALUES ('Ford','V3','Negro',245789,2),('Chevrolet','J5','Blanco',154321,1);
+INSERT INTO Vehiculo (marca,modelo,color,idCode,tipo,estado)
+VALUES ('Ford','V3','Negro',245789,2,1),('Chevrolet','J5','Blanco',154321,1,1);
 
-INSERT INTO Vehiculo (marca,modelo,color,idCode,tipo,vendidoPor)
-VALUES ('VMW','E3','Gris',154698,'1','159753');
+INSERT INTO Vehiculo (marca,modelo,color,idCode,tipo,estado,vendidoPor)
+VALUES ('VMW','E3','Gris',154698,1,0,159753);
 
 INSERT INTO Cliente (nombre,apellido,dni)
 VALUES ('Barney','Stinson',123456);
 
-SELECT * FROM Vehiculo;
+UPDATE Cliente SET vehiculoComprado = 154698 WHERE dni = 123456;
 
+INSERT INTO Vendido (idComprador,idCode)
+VALUES (123456,154698);
 
-UPDATE Cliente SET vehiculoComprado = '154698' WHERE dni = 123456;
+SELECT Vehiculo.marca,Vehiculo.modelo,Vehiculo.color,Tipo.descripcion,Vehiculo.estado,Vehiculo.vendidoPor,Vehiculo.idCode
+FROM Vehiculo INNER JOIN Tipo on Vehiculo.tipo = Tipo.id;

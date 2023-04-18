@@ -1,10 +1,12 @@
 package tpintegrador;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import tpintegrador.recursos.Vehiculo;
 import java.util.ArrayList;
 
 public class Concesionaria {
+    private Repositor r1;
     private ArrayList<Vehiculo> catalogo;
     private ArrayList<Empleado> empleados;
     
@@ -23,28 +25,23 @@ public class Concesionaria {
         this.catalogo = catalogo;
     }
     
-    /*public void cargaDeListado() throws IOException{
-        try{
-            Repositor r1 = new Repositor();        
-            r1.carga(this.catalogo);
-            for(Vehiculo vehiculo : this.catalogo){
-                System.out.println(vehiculo.toString());
-            }
-        }
-        catch(IOException e){
-            System.out.println(e.getMessage());
-        }
-    }*/
-    
-    public void cargaDeListado() throws IOException{
-        Repositor r1 = new Repositor();        
-        r1.carga(this.catalogo);
+    public void cargaDeDB() throws SQLException{
+        this.r1 = new Repositor();
+        this.r1.getVehiculos(this.catalogo);
         for(Vehiculo vehiculo : this.catalogo){
             System.out.println(vehiculo.toString());
         }
     }
     
-    public void run() throws IOException{
+    public void cargaDeListado() throws IOException{
+        this.r1 = new Repositor();        
+        this.r1.cargaPorLista(this.catalogo);
+        for(Vehiculo vehiculo : this.catalogo){
+            System.out.println(vehiculo.toString());
+        }
+    }
+    
+    public void run() throws IOException, SQLException{
         this.cargaDeListado();
     }
     

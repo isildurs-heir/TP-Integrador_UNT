@@ -1,4 +1,4 @@
-Marca,Modelo,Color,Tipo,status,vendidoPor
-Zuzuki,L2,Rojo,Auto,true,
-Ford,V5,Blanco,Utilitario,true,
-Mercedez Benz,G3,Rojo,Camion,false,456132
+Marca,Modelo,Color,Descripcion,Estado,VendidoPor,idCode
+Chevrolet,J5,Blanco,Auto,1,,154321
+VMW,E3,Gris,Auto,0,159753,154698
+Ford,V3,Negro,Utilitario,1,,245789

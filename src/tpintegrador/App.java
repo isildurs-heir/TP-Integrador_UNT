@@ -1,17 +1,17 @@
 package tpintegrador;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import tpintegrador.recursos.DbConn; //
 
 public class App {
 
     public static void main(String[] args){
         Concesionaria c1 = new Concesionaria();
+        //Repositor r1 = new Repositor();
         try {
+            //r1.getVehiculos(catalogo);
             c1.run();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
         
 
