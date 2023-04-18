@@ -1,5 +1,6 @@
 package tpintegrador;
 
+import tpintegrador.recursos.Vehiculo;
 import tpintegrador.recursos.Persona;
 
 public class Cliente extends Persona {

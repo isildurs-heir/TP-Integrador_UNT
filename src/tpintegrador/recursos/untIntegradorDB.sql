@@ -1,4 +1,4 @@
-DROP DATABASE untIntegrador;
+/*DROP DATABASE untIntegrador;*/
 CREATE DATABASE untIntegrador;
 USE untIntegrador;
 
@@ -22,7 +22,7 @@ CREATE TABLE Vehiculo(
 	marca VARCHAR(25) NOT NULL,
     modelo VARCHAR(25) NOT NULL,
     color VARCHAR(25) NOT NULL,
-    idCode INT AUTO_INCREMENT,
+    idCode INT,
     vendidoPor INT,
     tipo INT NOT NULL,
     PRIMARY KEY(idCode),
@@ -59,14 +59,16 @@ INSERT INTO Empleado (nombre,apellido,dni)
 VALUES('Marshall','Eriksen',159753),
 	  ('Ted','Mosby',357951);
       
-INSERT INTO Vehiculo (marca,modelo,color,tipo)
-VALUES ('Ford','V3','Negro',2),('Chevrolet','J5','Blanco',1);
+INSERT INTO Vehiculo (marca,modelo,color,idCode,tipo)
+VALUES ('Ford','V3','Negro',245789,2),('Chevrolet','J5','Blanco',154321,1);
+
+INSERT INTO Vehiculo (marca,modelo,color,idCode,tipo,vendidoPor)
+VALUES ('VMW','E3','Gris',154698,'1','159753');
 
 INSERT INTO Cliente (nombre,apellido,dni)
 VALUES ('Barney','Stinson',123456);
 
-UPDATE Cliente SET vehiculoComprado = '5' WHERE dni = 123456;
-
 SELECT * FROM Vehiculo;
-INSERT INTO Vehiculo (marca,modelo,color,tipo,vendidoPor)
-VALUES ('VMW','E3','Gris','1','159753');
+
+
+UPDATE Cliente SET vehiculoComprado = '154698' WHERE dni = 123456;
