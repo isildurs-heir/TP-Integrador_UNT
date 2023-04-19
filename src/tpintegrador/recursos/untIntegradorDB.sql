@@ -1,4 +1,4 @@
-DROP DATABASE untIntegrador;
+/*DROP DATABASE untIntegrador;*/
 CREATE DATABASE untIntegrador;
 USE untIntegrador;
 
@@ -25,13 +25,7 @@ CREATE TABLE Vehiculo(
     idCode INT,
     tipo INT,
     estado INT,
-    vendidoPor INT,
     PRIMARY KEY(idCode),
-    CONSTRAINT fk_vendidopor
-		FOREIGN KEY (vendidoPor)
-        REFERENCES Empleado(dni)
-		ON DELETE CASCADE
-		ON UPDATE NO ACTION,
 	CONSTRAINT fk_tipo
 		FOREIGN KEY (tipo)
 		REFERENCES Tipo(id)
@@ -44,19 +38,19 @@ CREATE TABLE Cliente(
 	nombre VARCHAR(25) NOT NULL,
     apellido VARCHAR(25) NOT NULL,
     dni INT,
-    vehiculoComprado INT,
-    PRIMARY KEY(dni),
-    CONSTRAINT fk_vehiculo
-		FOREIGN KEY (vehiculoComprado)
-        REFERENCES Vehiculo(idCode)
-			ON DELETE CASCADE
-            ON UPDATE NO ACTION
+    PRIMARY KEY(dni)
 );
 
 DROP TABLE IF EXISTS Vendido;
 CREATE TABLE Vendido(
 	idComprador INT,
+    idVendedor INT,
     idCode INT,
+    CONSTRAINT fk_vendedor
+		FOREIGN KEY (idVendedor)
+        REFERENCES Empleado(dni)
+			ON DELETE CASCADE
+            ON UPDATE NO ACTION,
     CONSTRAINT fk_comprador
 		FOREIGN KEY (idComprador)
         REFERENCES Cliente(dni)
@@ -79,16 +73,33 @@ VALUES('Marshall','Eriksen',159753),
 INSERT INTO Vehiculo (marca,modelo,color,idCode,tipo,estado)
 VALUES ('Ford','V3','Negro',245789,2,1),('Chevrolet','J5','Blanco',154321,1,1);
 
-INSERT INTO Vehiculo (marca,modelo,color,idCode,tipo,estado,vendidoPor)
-VALUES ('VMW','E3','Gris',154698,1,0,159753);
+INSERT INTO Vehiculo (marca,modelo,color,idCode,tipo,estado)
+VALUES ('VMW','E3','Gris',154698,1,0);
 
 INSERT INTO Cliente (nombre,apellido,dni)
 VALUES ('Barney','Stinson',123456);
 
-UPDATE Cliente SET vehiculoComprado = 154698 WHERE dni = 123456;
+INSERT INTO Vendido (idComprador,idVendedor,idCode)
+VALUES (123456,159753,154698);
 
-INSERT INTO Vendido (idComprador,idCode)
-VALUES (123456,154698);
+INSERT INTO Cliente (nombre,apellido,dni)
+VALUES ('Lily','Aldrin',741852);
 
-SELECT Vehiculo.marca,Vehiculo.modelo,Vehiculo.color,Tipo.descripcion,Vehiculo.estado,Vehiculo.vendidoPor,Vehiculo.idCode
+INSERT INTO Vehiculo (marca,modelo,color,idCode,tipo,estado)
+VALUES ('Ford','K6','Negro',984321,2,0),('VMW','Y45','Blanco',369852,1,0);
+
+
+INSERT INTO Vendido (idComprador,idVendedor,idCode)
+VALUES (741852,159753,984321),(123456,357951,369852);
+
+SELECT * FROM Empleado;
+SELECT * FROM Vehiculo;
+
+
+SELECT Vehiculo.marca,Vehiculo.modelo,Vehiculo.color,Vehiculo.idCode,Vehiculo.estado,Tipo.descripcion
 FROM Vehiculo INNER JOIN Tipo on Vehiculo.tipo = Tipo.id;
+
+SELECT Cliente.nombre,Cliente.apellido,Cliente.dni,Vehiculo.marca,Vehiculo.modelo
+FROM Cliente INNER JOIN Vendido on Cliente.dni = Vendido.idComprador
+			 INNER JOIN Vehiculo on Vehiculo.idCode = Vendido.idCode;
+

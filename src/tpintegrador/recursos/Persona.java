@@ -37,5 +37,10 @@ public abstract class Persona {
         this.dni = dni;
     }
     
+    @Override
+    public String toString(){
+        return this.getNombre() + " " + this.getApellido() + " " + this.getDni();
+    }
+    
     
 }

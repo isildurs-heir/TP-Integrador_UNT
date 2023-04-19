@@ -14,14 +14,47 @@ public class Repositor extends Reader {
     
     public Repositor(){
         super();
-        this.listado = new ArrayList<>();
         this.dbconn = new DbConn();
     }
     
     public void getVehiculos(ArrayList<Vehiculo> catalogo) throws SQLException{
+        this.listado = new ArrayList<>();
         this.dbconn.Vehiculos(this.listado);
         for(String[] elemento: this.listado){
             catalogo.add(this.nuevoVehiculo(elemento));
+        }
+    }
+    
+    public void getEmpleados(ArrayList<Empleado> empleados) throws SQLException{
+        this.listado = new ArrayList<>();
+        this.dbconn.Empleados(this.listado);
+        for(String[] elemento: this.listado){
+            empleados.add(this.nuevoEmpleado(elemento));
+        }
+    }
+    
+    public void getVentas(ArrayList<Empleado> empleados) throws SQLException{
+        this.listado = new ArrayList<>();
+        for(Empleado empleado : empleados){
+            this.dbconn.getVentasById(this.listado,empleado.getDni());
+            for(String[] info : this.listado){
+                empleado.registrarVenta(info[3]+","+info[4],info[0]+","+info[1]+","+info[2]);
+            }
+            this.listado.clear();
+        }
+        
+    }
+    
+    private Empleado nuevoEmpleado(String[] elemento){
+        return new Empleado(elemento[0],elemento[1],Integer.parseInt(elemento[2]));
+    }
+    
+    private Vehiculo nuevoVehiculo(String[] elemento) {
+        switch (elemento[5]) { 
+            case "Auto" -> {return new Auto(elemento[0], elemento[1], elemento[2], Integer.parseInt(elemento[3]), Integer.parseInt(elemento[4]) == 1,elemento[4]);}
+            case "Camion" -> {return new Camion(elemento[0], elemento[1], elemento[2], Integer.parseInt(elemento[3]), Integer.parseInt(elemento[4]) == 1,elemento[4]);}
+            case "Utilitario" -> {return new Utilitario(elemento[0], elemento[1], elemento[2], Integer.parseInt(elemento[3]), Integer.parseInt(elemento[4]) == 1,elemento[4]);}
+            default -> {return null;}
         }
     }
     
@@ -31,36 +64,5 @@ public class Repositor extends Reader {
             catalogo.add(this.nuevoVehiculo(elemento));
         }
     }
-    
-    private Vehiculo nuevoVehiculo(String[] elemento) {
-        int idCode = Integer.parseInt(elemento[6]);
-        switch (elemento[3]) {
-            case "Auto" -> {
-                if (Integer.parseInt(elemento[4]) == 1) {
-                    return new Auto(elemento[0], elemento[1], elemento[2], idCode, elemento[3], Integer.parseInt(elemento[4]) == 1);
-                } else {
-                    return new Auto(elemento[0], elemento[1], elemento[2], idCode, elemento[3], Integer.parseInt(elemento[4]) == 1, Integer.parseInt(elemento[5]));
-                }
-            }
-            case "Camion" -> {
-                if (Integer.parseInt(elemento[4]) == 1) {
-                    return new Camion(elemento[0], elemento[1], elemento[2], idCode, elemento[3], Integer.parseInt(elemento[4]) == 1);
-                } else {
-                    return new Camion(elemento[0], elemento[1], elemento[2], idCode, elemento[3], Integer.parseInt(elemento[4]) == 1, Integer.parseInt(elemento[5]));
-                }
-            }
-            case "Utilitario" -> {
-                if (Integer.parseInt(elemento[4]) == 1) {
-                    return new Utilitario(elemento[0], elemento[1], elemento[2], idCode, elemento[3], Integer.parseInt(elemento[4]) == 1);
-                } else {
-                    return new Utilitario(elemento[0], elemento[1], elemento[2], idCode, elemento[3], Integer.parseInt(elemento[4]) == 1, Integer.parseInt(elemento[5]));
-                }
-            }
-            default -> {
-                return null;
-            }
-        }
-    }
-    
     
 }

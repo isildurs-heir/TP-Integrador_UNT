@@ -7,7 +7,6 @@ public abstract class Vehiculo {
     private String Color;
     private int idCode;
     private Boolean status;
-    private int vendidoPor;
 
     public Vehiculo(String Marca, String Modelo, String Color, int idCode,Boolean status) {
         this.Marca = Marca;
@@ -17,14 +16,6 @@ public abstract class Vehiculo {
         this.status = status;
     }
     
-    public Vehiculo(String Marca, String Modelo, String Color, int idCode,Boolean status,int vendidoPor){
-        this.Marca = Marca;
-        this.Modelo = Modelo;
-        this.Color = Color;
-        this.idCode = idCode;
-        this.status = status;
-        this.vendidoPor = vendidoPor;
-    }
 
     public String getMarca() {
         return Marca;
@@ -68,21 +59,9 @@ public abstract class Vehiculo {
     
     public String statusToString(){
         if(this.status) return "Disponible";
-        else return "Vendido por Vendedor: " + this.getVendidoPor();
+        else return "Vendido";
     }
 
-    public int getVendidoPor() {
-        return vendidoPor;
-    }
-
-    public void setVendidoPor(int vendidoPor) {
-        this.vendidoPor = vendidoPor;
-    }
-    
-    
-    
-    
-    
     @Override
     public String toString(){
         return(this.getMarca() + " " + this.getModelo() + " " + this.getColor() + " " + this.getId() + " " + this.statusToString());
