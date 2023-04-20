@@ -15,5 +15,17 @@ public class Cliente extends Persona {
         this.vehiculoComprado = vehiculoComprado;
     }
     
+    public String vehiculoCompradoToString(){
+        if(this.vehiculoComprado != null)
+            return this.vehiculoComprado.toString();
+        else
+            return "";
+    }
+    
+    @Override
+    public String toString(){
+        return super.toString()+" "+ this.vehiculoCompradoToString();
+    }
+    
     
 }

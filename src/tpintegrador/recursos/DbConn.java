@@ -71,7 +71,47 @@ public class DbConn {
         this.closeConn();
     }
     
-    public void createConn(){
+    public void getInfoById(ArrayList<String[]> datos,int dni) throws SQLException{
+        this.createConn();
+        String query = String.format("SELECT idCode,idVendedor FROM Vendido WHERE idComprador = %s",dni);
+        ResultSet result = this.runQuery(query);
+        while(result.next()){
+            String[] info = new String[2];
+            info[0] = result.getString(1);
+            info[1] = result.getString(2);
+            datos.add(info);
+        }
+        this.closeConn();
+    }
+    
+    public void getClienteById(ArrayList<String[]> datos, int dni) throws SQLException{
+        this.createConn();
+        String query = String.format("SELECT nombre,apellido FROM Cliente WHERE dni = %s",dni);
+        ResultSet result = this.runQuery(query);
+        while(result.next()){
+            String[] info = new String[2];
+            info[0] = result.getString(1);
+            info[1] = result.getString(2);
+            datos.add(info);
+        }
+        this.closeConn();
+    }
+    
+    public void createCliente(String nombre,String apellido ,int dni) throws SQLException{
+        this.createConn();
+        String query = String.format("INSERT INTO Cliente (nombre,apellido,dni) VALUES('%s','%s',%s);",nombre,apellido,dni);
+        this.runQuery(query);
+    }
+    
+    public void createVenta(int dniComprador,int dniVendedor,int idCode) throws SQLException{
+        this.createConn();
+        String query = String.format("UPDATE Vehiculo SET estado = 0 WHERE idCode = %s",idCode);
+        this.runQuery(query);
+        query = String.format("INSERT INTO Vendido (idComprador,idVendedor,idCode) VALUES (%s,%s,%s);",dniComprador,dniVendedor,idCode);
+        this.runQuery(query);
+    }
+    
+    private void createConn(){
         try{
             conn = DriverManager.getConnection(DB_URL,USER,PWD);
         }
@@ -80,12 +120,12 @@ public class DbConn {
         }
     }
     
-    public ResultSet runQuery(String query) throws SQLException{
+    private ResultSet runQuery(String query) throws SQLException{
         this.stmt = this.conn.createStatement();
         return this.stmt.executeQuery(query);
     }
     
-    public void closeConn() throws SQLException{
+    private void closeConn() throws SQLException{
         this.conn.close();
     }
     

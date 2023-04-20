@@ -3,6 +3,7 @@ package tpintegrador;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import tpintegrador.recursos.DbConn;
 import tpintegrador.recursos.Reader;
 import tpintegrador.recursos.Vehiculo;
@@ -45,6 +46,89 @@ public class Repositor extends Reader {
         
     }
     
+    public Cliente nuevoCliente() throws SQLException{
+        String nombre,apellido;
+        int dni;
+        Scanner sc = new Scanner(System.in);
+        this.listado = new ArrayList<>();
+        
+        System.out.println("Ingrese dni:");
+        dni = sc.nextInt();
+        sc.nextLine();
+        this.dbconn.getClienteById(this.listado,dni);
+        if(this.listado.isEmpty()){
+            System.out.println("Ingrese nombre:");
+            nombre = sc.nextLine();
+            sc.nextLine();
+            System.out.println("Ingrese apellido");
+            apellido = sc.nextLine();
+            sc.nextLine();
+            this.dbconn.createCliente(nombre,apellido,dni);
+        }
+        else{
+            System.out.println("Cliente ya registrado");
+            nombre = this.listado.get(0)[0];
+            apellido = this.listado.get(0)[1];
+        }
+        return new Cliente(nombre,apellido,dni);
+    } //ver que onda
+    
+    public void getHistorialById(ArrayList<Vehiculo> catalogo,ArrayList<Empleado> empleados,int dni) throws SQLException{
+        this.listado = new ArrayList<>();
+        this.dbconn.getInfoById(this.listado,dni);
+        if(!this.listado.isEmpty()){
+            for(String[] info : this.listado){
+                System.out.println("Compras registradas:");
+                System.out.println("Vehiculo comprado: "+this.getVehiculoCatalogo(catalogo,Integer.parseInt(info[0])).toString()+"\nVendido por: "+this.getEmpleadosCatalogo(empleados,Integer.parseInt(info[1])));
+            }
+        }
+        else{
+            System.out.println("No se registran compras a nombre de este cliente.");
+        }
+    }
+    
+    public Vehiculo getVehiculoCatalogo(ArrayList<Vehiculo> catalogo,int idCode){
+        for(Vehiculo vehiculo : catalogo){
+            if(vehiculo.getId() == idCode){
+                return vehiculo;
+            }
+        }
+        return null;
+    }
+    
+    public Empleado getEmpleadosCatalogo(ArrayList<Empleado> empleados, int dni){
+        for(Empleado empleado : empleados){
+            if(empleado.getDni() == dni){
+                return empleado;
+            }
+        }
+        return null;
+    }
+    
+    public void nuevaVenta(Empleado empleado,Cliente cliente,Vehiculo vehiculo) throws SQLException{
+        this.dbconn.createVenta(cliente.getDni(),empleado.getDni(),vehiculo.getId());
+        vehiculo.setStatus(false);
+        cliente.setVehiculo(vehiculo);
+    }
+    
+    public void cargaPorLista(ArrayList<Vehiculo> catalogo) throws IOException{
+        this.leerCsv(this.listado);
+        for(String[] elemento : this.listado){
+            catalogo.add(this.nuevoVehiculo(elemento));
+        }
+    }
+    
+    public Vehiculo buscarEnCatalogo(ArrayList<Vehiculo> catalogo,int idCode){
+        for(Vehiculo vehiculo : catalogo){
+            if(vehiculo.status()){
+                if(vehiculo.getId() == idCode){
+                    return vehiculo;
+                }
+            }
+        }
+        return null; //consultar
+    }
+    
     private Empleado nuevoEmpleado(String[] elemento){
         return new Empleado(elemento[0],elemento[1],Integer.parseInt(elemento[2]));
     }
@@ -55,13 +139,6 @@ public class Repositor extends Reader {
             case "Camion" -> {return new Camion(elemento[0], elemento[1], elemento[2], Integer.parseInt(elemento[3]), Integer.parseInt(elemento[4]) == 1,elemento[4]);}
             case "Utilitario" -> {return new Utilitario(elemento[0], elemento[1], elemento[2], Integer.parseInt(elemento[3]), Integer.parseInt(elemento[4]) == 1,elemento[4]);}
             default -> {return null;}
-        }
-    }
-    
-    public void cargaPorLista(ArrayList<Vehiculo> catalogo) throws IOException{
-        this.leerCsv(this.listado);
-        for(String[] elemento : this.listado){
-            catalogo.add(this.nuevoVehiculo(elemento));
         }
     }
     

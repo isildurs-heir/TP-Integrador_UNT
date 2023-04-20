@@ -12,12 +12,7 @@ public class App {
             c1.run();
         } catch (Exception e) {
             System.err.println(e.getMessage());
-        }
-        
-
-        System.out.println("no sme importa nada el error");
-        
-        
+        }        
     }
     
 }
