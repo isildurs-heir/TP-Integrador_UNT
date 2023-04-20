@@ -29,28 +29,11 @@ public class Concesionaria {
     
     public void cargaDeListado() throws IOException{       
         this.r1.cargaPorLista(this.catalogo);
-        for(Vehiculo vehiculo : this.catalogo){
-            System.out.println(vehiculo.toString());
-        }
     }
-    
-    public void listarCatalogoDisponible(){
-        for(Vehiculo vehiculo : this.catalogo){
-            if(vehiculo.status()){
-                System.out.println(vehiculo.toStringToListado());
-            }
-        }
-    }
-    
-    public void listarCatalogoCompleto(){
-        for(Vehiculo vehiculo : this.catalogo){
-            System.out.println(vehiculo.toStringToListado());
-        }
-    }
-    
     
     public void run() throws IOException, SQLException{
         this.r1 = new Repositor();
+        this.cargaDeListado();
         this.cargaDeDB();
         this.cliente = this.r1.nuevoCliente();
         this.atenderCliente();
@@ -60,7 +43,7 @@ public class Concesionaria {
     public void atenderCliente() throws SQLException{
         Scanner sc = new Scanner(System.in);
         Random rand = new Random();
-        Empleado empleado = this.empleados.get(rand.nextInt(2));
+        Empleado empleado = this.empleados.get(rand.nextInt(3));
         System.out.println("Vendedor asignado: "+empleado.toString());
         int op = -1;
         int idCode;
@@ -69,12 +52,12 @@ public class Concesionaria {
             op = sc.nextInt();
             switch(op){
                 case 1 -> {
-                    this.listarCatalogoDisponible();
+                    this.r1.listarCatalogoDisponible(this.catalogo);
                     idCode = sc.nextInt();
-                    this.r1.nuevaVenta(empleado, cliente,r1.buscarEnCatalogo(this.catalogo,idCode));
+                    this.r1.nuevaVenta(empleado,this.cliente,r1.buscarEnCatalogo(this.catalogo,idCode));
                 }
                 case 2 -> {
-                    this.listarCatalogoCompleto();
+                    this.r1.listarCatalogoCompleto(this.catalogo);
                 }
                 case 3 -> {
                     this.r1.getHistorialById(this.catalogo,this.empleados,this.cliente.getDni());

@@ -6,10 +6,10 @@ import java.util.ArrayList;
 public class DbConn {
     
     static final String JDBC_DRIVER = "org.mariadb.jdbc.Driver"; //cambiar para jdbc de mysql
-    static final String DB_URL = "jdbc:mariadb://localhost:3306/untIntegrador";
+    static final String DB_URL = "jdbc:mariadb://localhost:3306/untIntegrador"; // cambiar la url o colocar "jdbc:mysqldb://localhost:3306/untIntegrador"
     //credenciales
-    static final String USER = "root";
-    static final String PWD = "Gondor.22";
+    static final String USER = "root";  //cambiar nombre
+    static final String PWD = "Gondor.22"; // cambiar pwd
     private Connection conn;
     private Statement stmt;
     
@@ -97,10 +97,23 @@ public class DbConn {
         this.closeConn();
     }
     
+    public void getVehiculoById(ArrayList<String[]> datos,int idCode) throws SQLException{
+        this.createConn();
+        String query = String.format("SELECT modelo FROM Vehiculo WHERE idCode = %s;",idCode);
+        ResultSet result = this.runQuery(query);
+        while(result.next()){
+            String[] info = new String[1];
+            info[0] = result.getString(1);
+            datos.add(info);
+        }
+        this.closeConn();
+    }
+    
     public void createCliente(String nombre,String apellido ,int dni) throws SQLException{
         this.createConn();
         String query = String.format("INSERT INTO Cliente (nombre,apellido,dni) VALUES('%s','%s',%s);",nombre,apellido,dni);
         this.runQuery(query);
+        this.closeConn();
     }
     
     public void createVenta(int dniComprador,int dniVendedor,int idCode) throws SQLException{
@@ -109,6 +122,14 @@ public class DbConn {
         this.runQuery(query);
         query = String.format("INSERT INTO Vendido (idComprador,idVendedor,idCode) VALUES (%s,%s,%s);",dniComprador,dniVendedor,idCode);
         this.runQuery(query);
+        this.closeConn();
+    }
+    
+    public void createVehiculo(String marca, String modelo, String color, int idCode, int estado,String descripcion) throws SQLException{
+        this.createConn();
+        String query = String.format("INSERT INTO Vehiculo (marca,modelo,color,idCode,estado,tipo) VALUES ('%s','%s','%s',%s,%s,%s);",marca,modelo,color,idCode,estado,this.helper(descripcion));
+        this.runQuery(query);
+        this.closeConn();
     }
     
     private void createConn(){
@@ -129,6 +150,13 @@ public class DbConn {
         this.conn.close();
     }
     
-    
+    private int helper(String descripcion){
+        switch(descripcion){
+            case "Auto" -> { return 1;}
+            case "Utilitario" -> { return 2;}
+            case "Camion" -> { return 3;}
+            default -> { return 0;}
+        }
+    }
     
 }

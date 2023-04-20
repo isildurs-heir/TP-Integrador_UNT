@@ -1,4 +1,5 @@
-Marca,Modelo,Color,Descripcion,Estado,VendidoPor,idCode
-Chevrolet,J5,Blanco,Auto,1,,154321
-VMW,E3,Gris,Auto,0,159753,154698
-Ford,V3,Negro,Utilitario,1,,245789
+marca,modelo,color,idCode,estado,tipo
+Bugatti,W16,Azul,789123,1,Auto
+Bugatti,W9,Rojo,789124,1,Auto
+Volvo,T2,Blanco,654321,1,Camion
+Volvo,G6,Negro,654322,1,Camion

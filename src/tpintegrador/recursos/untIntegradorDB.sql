@@ -115,6 +115,5 @@ SELECT * FROM Cliente;
 SELECT Vehiculo.marca,Vehiculo.modelo,Vehiculo.color,Vehiculo.idCode,Vehiculo.estado,Tipo.descripcion
 FROM Vehiculo INNER JOIN Tipo on Vehiculo.tipo = Tipo.id;
 
-SELECT idCode,idVendedor FROM Vendido WHERE idComprador = 741852;
              
 

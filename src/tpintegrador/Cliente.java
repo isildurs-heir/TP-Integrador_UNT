@@ -17,7 +17,7 @@ public class Cliente extends Persona {
     
     public String vehiculoCompradoToString(){
         if(this.vehiculoComprado != null)
-            return this.vehiculoComprado.toString();
+            return this.vehiculoComprado.toStringtoCliente();
         else
             return "";
     }

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Empleado extends Persona {
-    
     private Map<String,String> vendidos;
 
     public Empleado(String nombre, String apellido, int dni) {

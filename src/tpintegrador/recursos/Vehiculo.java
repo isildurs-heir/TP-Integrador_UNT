@@ -67,6 +67,10 @@ public abstract class Vehiculo {
         return(this.getMarca() + " " + this.getModelo() + " " + this.getColor() + " " + this.getId() + " " + this.statusToString());
     }
     
+    public String toStringtoCliente(){
+        return this.getMarca() + " " + this.getModelo() + " " + this.getColor() + " " + this.getId();
+    }
+    
     public String toStringToListado(){
         return this.getId()+")_ "+this.getMarca()+", "+this.getModelo()+" - "+this.getColor()+"   "+this.statusToString();
     }

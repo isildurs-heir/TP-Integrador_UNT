@@ -22,7 +22,7 @@ public class Repositor extends Reader {
         this.listado = new ArrayList<>();
         this.dbconn.Vehiculos(this.listado);
         for(String[] elemento: this.listado){
-            catalogo.add(this.nuevoVehiculo(elemento));
+            catalogo.add(this.createVehiculo(elemento));
         }
     }
     
@@ -30,7 +30,7 @@ public class Repositor extends Reader {
         this.listado = new ArrayList<>();
         this.dbconn.Empleados(this.listado);
         for(String[] elemento: this.listado){
-            empleados.add(this.nuevoEmpleado(elemento));
+            empleados.add(this.createEmpleado(elemento));
         }
     }
     
@@ -111,10 +111,20 @@ public class Repositor extends Reader {
         cliente.setVehiculo(vehiculo);
     }
     
-    public void cargaPorLista(ArrayList<Vehiculo> catalogo) throws IOException{
+    private boolean existeVehiculo(int idCode) throws SQLException{
+        this.dbconn.getVehiculoById(this.listado, idCode);
+        return !this.listado.isEmpty();
+    }
+    
+    
+    public void cargaPorLista(ArrayList<Vehiculo> catalogo) throws IOException, SQLException{
+        this.listado = new ArrayList<>();
         this.leerCsv(this.listado);
         for(String[] elemento : this.listado){
-            catalogo.add(this.nuevoVehiculo(elemento));
+            if(this.existeVehiculo(Integer.parseInt(elemento[3]))){
+                this.dbconn.createVehiculo(elemento[0],elemento[1],elemento[2],Integer.parseInt(elemento[3]),Integer.parseInt(elemento[4]),elemento[5]);
+                catalogo.add(this.createVehiculo(elemento));
+            }
         }
     }
     
@@ -129,17 +139,30 @@ public class Repositor extends Reader {
         return null; //consultar
     }
     
-    private Empleado nuevoEmpleado(String[] elemento){
-        return new Empleado(elemento[0],elemento[1],Integer.parseInt(elemento[2]));
-    }
-    
-    private Vehiculo nuevoVehiculo(String[] elemento) {
-        switch (elemento[5]) { 
-            case "Auto" -> {return new Auto(elemento[0], elemento[1], elemento[2], Integer.parseInt(elemento[3]), Integer.parseInt(elemento[4]) == 1,elemento[4]);}
-            case "Camion" -> {return new Camion(elemento[0], elemento[1], elemento[2], Integer.parseInt(elemento[3]), Integer.parseInt(elemento[4]) == 1,elemento[4]);}
-            case "Utilitario" -> {return new Utilitario(elemento[0], elemento[1], elemento[2], Integer.parseInt(elemento[3]), Integer.parseInt(elemento[4]) == 1,elemento[4]);}
-            default -> {return null;}
+    public void listarCatalogoDisponible(ArrayList<Vehiculo> catalogo){
+        for(Vehiculo vehiculo : catalogo){
+            if(vehiculo.status()){
+                System.out.println(vehiculo.toStringToListado());
+            }
         }
     }
     
+    public void listarCatalogoCompleto(ArrayList<Vehiculo> catalogo){
+        for(Vehiculo vehiculo : catalogo){
+            System.out.println(vehiculo.toStringToListado());
+        }
+    }
+    
+    private Empleado createEmpleado(String[] elemento){
+        return new Empleado(elemento[0],elemento[1],Integer.parseInt(elemento[2]));
+    }
+    
+    private Vehiculo createVehiculo(String[] elemento) {
+        switch (elemento[5]) { 
+            case "Auto" -> {return new Auto(elemento[0], elemento[1], elemento[2], Integer.parseInt(elemento[3]), Integer.parseInt(elemento[4]) == 1,elemento[5]);}
+            case "Camion" -> {return new Camion(elemento[0], elemento[1], elemento[2], Integer.parseInt(elemento[3]), Integer.parseInt(elemento[4]) == 1,elemento[5]);}
+            case "Utilitario" -> {return new Utilitario(elemento[0], elemento[1], elemento[2], Integer.parseInt(elemento[3]), Integer.parseInt(elemento[4]) == 1,elemento[5]);}
+            default -> {return null;}
+        }
+    }
 }
