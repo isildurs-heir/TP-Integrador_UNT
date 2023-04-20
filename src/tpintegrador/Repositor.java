@@ -121,7 +121,7 @@ public class Repositor extends Reader {
         this.listado = new ArrayList<>();
         this.leerCsv(this.listado);
         for(String[] elemento : this.listado){
-            if(this.existeVehiculo(Integer.parseInt(elemento[3]))){
+            if(!this.existeVehiculo(Integer.parseInt(elemento[3]))){
                 this.dbconn.createVehiculo(elemento[0],elemento[1],elemento[2],Integer.parseInt(elemento[3]),Integer.parseInt(elemento[4]),elemento[5]);
                 catalogo.add(this.createVehiculo(elemento));
             }

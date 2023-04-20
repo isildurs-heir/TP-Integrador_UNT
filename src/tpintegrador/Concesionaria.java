@@ -27,13 +27,13 @@ public class Concesionaria {
         this.r1.getVentas(this.empleados);
     }
     
-    public void cargaDeListado() throws IOException{       
+    public void cargaDeListado() throws IOException, SQLException{       
         this.r1.cargaPorLista(this.catalogo);
     }
     
     public void run() throws IOException, SQLException{
         this.r1 = new Repositor();
-        this.cargaDeListado();
+        this.cargaDeListado(); //quitar esto para evitar la carga del archivo csv
         this.cargaDeDB();
         this.cliente = this.r1.nuevoCliente();
         this.atenderCliente();
