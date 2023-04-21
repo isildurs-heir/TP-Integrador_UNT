@@ -1,5 +1,7 @@
 # TP-Integrador_UNT
 
+El script de la base de datos y el archivo vsc está en recursos
+
 Listado inicial en CSV
 IDCODE  MARCA    MODELO COLOR   ESTADO
 789123)_ Bugatti, W16 - Azul   Disponible
